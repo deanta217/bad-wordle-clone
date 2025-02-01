@@ -1,19 +1,22 @@
-import rich, os, random, length
+import rich, os, random, length, json
 from rich import print as rprint
 def wordGen():
-    global Word
-    global letter3, letter1, letter2, letter4, letter5, trycounter
-    Word = random.choice(wordsList)
-    letter1, letter2, letter3, letter4, letter5 = Word
+    global word
+    global letter3, letter1, letter2, letter4, letter5, trycounter, wordsList
+    with open('words.json', 'r') as file:
+        wordsList = json.load(file)
+    word = random.choice(data['words'])
+    print(word)
+    letter1, letter2, letter3, letter4, letter5 = word
     trycounter = 0
 def wordCheck(Guess):
     global trycounter
     if len(Guess) == 5:
-        if Guess == Word:
+        if Guess == word:
             trycounter = trycounter + 1
             rprint("[green]Good Job! You guessed the word in ", trycounter, " tries!")
             print("🟩🟩🟩🟩🟩")
-        elif Guess in wordsList:
+        elif Guess in wordsList['words']:
             trycounter = trycounter + 1
             ## 0 = Not in word, 1 = In word, wrong spot, 2 = In right spot ##
             rprint("[yellow]Incorrect Word.")
@@ -42,8 +45,20 @@ def wordCheck(Guess):
             else:
                 L3HINT = "⬜"
             #LETTER4
-            print(L1HINT, L2HINT)
-            print(wordsList)
+            if guessl4 == letter4:
+                L4HINT = "🟩"
+            elif guessl4 == letter1 or guessl4 == letter2 or guessl4 == letter3 or guessl4 == letter5:
+                L4HINT = "🟨"
+            else:
+                L4HINT = "⬜"
+            #LETTER5
+            if guessl5 == letter5:
+                L5HINT = "🟩"
+            elif guessl5 == letter1 or guessl5 == letter2 or guessl5 == letter4 or guessl5 == letter3:
+                L5HINT = "🟨"
+            else:
+                L5HINT = "⬜"
+            print(L1HINT, L2HINT, L3HINT, L4HINT, L5HINT)
         else:
             print("Not in word list.")
         
@@ -52,10 +67,13 @@ def wordCheck(Guess):
             
     else:
         rprint("[red]Please enter a valid, 5 letter word.")
-wordsList = ["ABCDF", "BACDF", "FCDFA"]
+with open('words.json', 'r') as file:
+    data = json.load(file)
+word = random.choice(data['words'])
+
 
 wordGen()
-print(Word)
+print(word)
 print(letter3)
 while trycounter <= 5:
     Relations = input("Guess!")
