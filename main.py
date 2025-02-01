@@ -1,4 +1,4 @@
-import rich, os, random, length, json
+import rich, os, random, length, json, sys
 from rich import print as rprint
 def wordGen():
     global word
@@ -59,12 +59,21 @@ def wordCheck(Guess):
             else:
                 L5HINT = "⬜"
             print(L1HINT, L2HINT, L3HINT, L4HINT, L5HINT)
+            if trycounter == 1:
+                try1answer = L1HINT + L2HINT + L3HINT + L4HINT + L5HINT
+            elif trycounter == 2:
+                try2answer = L1HINT + L2HINT + L3HINT + L4HINT + L5HINT
+            elif trycounter == 3:
+                try3answer = L1HINT + L2HINT + L3HINT + L4HINT + L5HINT
+            elif trycounter == 4:
+                try4answer = L1HINT + L2HINT + L3HINT + L4HINT + L5HINT
+            elif trycounter == 5:
+                try5answer = L1HINT + L2HINT + L3HINT + L4HINT + L5HINT
+            else:
+                rprint("[red]Error! You have surpassed the 5 try limit. Quiting Program...")
+                sys.exit()
         else:
             print("Not in word list.")
-        
-            
-         
-            
     else:
         rprint("[red]Please enter a valid, 5 letter word.")
 with open('words.json', 'r') as file:
@@ -78,4 +87,5 @@ print(letter3)
 while trycounter <= 5:
     Relations = input("Guess!")
     wordCheck(Relations)
-print("failure")
+print("Ran out of guesses.")
+print("The word was ", word, ".")
