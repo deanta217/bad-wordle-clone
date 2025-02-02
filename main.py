@@ -1,25 +1,47 @@
-import rich, os, random, length, json, sys
+import rich, os, random, length, json, sys, time
 from rich import print as rprint
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
 def wordGen():
     global word
-    global letter3, letter1, letter2, letter4, letter5, trycounter, wordsList
+    global letter3, letter1, letter2, letter4, letter5, trycounter, wordsList, win
+    win = 0
+    try1answer = ""
+    try2answer = ""
+    try3answer = ""
+    try4answer = ""
+    try5answer = ""
     with open('words.json', 'r') as file:
         wordsList = json.load(file)
     word = random.choice(data['words'])
-    print(word)
+    ##rprint("[answer]Answer is " + word)##
+    #uncomment to cheat#
     letter1, letter2, letter3, letter4, letter5 = word
     trycounter = 0
 def wordCheck(Guess):
-    global trycounter
+    global trycounter, try1answer, try2answer, try3answer, try4answer, try5answer, win
     if len(Guess) == 5:
         if Guess == word:
             trycounter = trycounter + 1
             rprint("[green]Good Job! You guessed the word in ", trycounter, " tries!")
             print("🟩🟩🟩🟩🟩")
+            win = 1
+            if trycounter == 1:
+                try1answer = "🟩🟩🟩🟩🟩"
+            elif trycounter == 2:
+                try2answer = '🟩🟩🟩🟩🟩'
+            elif trycounter == 3:
+                try3answer = '🟩🟩🟩🟩🟩'
+            elif trycounter == 4:
+                try4answer = '🟩🟩🟩🟩🟩'
+            elif trycounter == 5:
+                try5answer = '🟩🟩🟩🟩🟩'
+            else:
+                rprint("[red]Error! You have surpassed the 5 try limit. Quiting Program...")
+                sys.exit()
         elif Guess in wordsList['words']:
             trycounter = trycounter + 1
             ## 0 = Not in word, 1 = In word, wrong spot, 2 = In right spot ##
-            rprint("[yellow]Incorrect Word.")
             ## breaks down into letters ##
             guessl1, guessl2, guessl3, guessl4, guessl5 = Guess
             #LETTER1
@@ -58,7 +80,7 @@ def wordCheck(Guess):
                 L5HINT = "🟨"
             else:
                 L5HINT = "⬜"
-            print(L1HINT, L2HINT, L3HINT, L4HINT, L5HINT)
+            print(L1HINT, L2HINT, L3HINT, L4HINT, L5HINT, "\n")
             if trycounter == 1:
                 try1answer = L1HINT + L2HINT + L3HINT + L4HINT + L5HINT
             elif trycounter == 2:
@@ -76,16 +98,43 @@ def wordCheck(Guess):
             print("Not in word list.")
     else:
         rprint("[red]Please enter a valid, 5 letter word.")
+def genSummary():
+    print("bad-wordle-clone")
+    print("word:" + word)
+    print("took " + str(trycounter) + " attempts")
+    if trycounter == 1:
+        print(try1answer)
+    elif trycounter == 2:
+        print(try1answer)
+        print(try2answer)
+    elif trycounter == 3:
+        print(try1answer)
+        print(try2answer)
+        print(try3answer)
+    elif trycounter == 4:
+        print(try1answer)
+        print(try2answer)
+        print(try3answer)
+        print(try4answer)
+    elif trycounter == 5:
+        print(try1answer)
+        print(try2answer)
+        print(try3answer)
+        print(try4answer)
+        print(try5answer)
 with open('words.json', 'r') as file:
     data = json.load(file)
 word = random.choice(data['words'])
-
-
 wordGen()
-print(word)
-print(letter3)
-while trycounter <= 5:
-    Relations = input("Guess!")
+clear_screen()
+while trycounter <= 4:
+    if win == 1:
+        break
+    Relations = input("Guess!\n")
     wordCheck(Relations)
-print("Ran out of guesses.")
-print("The word was ", word, ".")
+if win == 0:
+    print("Ran out of guesses.")
+    print("The word was ", word, ".")
+time.sleep(1)
+clear_screen()
+genSummary()
